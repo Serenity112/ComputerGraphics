@@ -5,7 +5,7 @@ namespace GeometricStructures
     public class GeomPoint
     {
         private Matrix matrix;
-        public float x
+        public double x
         {
             get
             {
@@ -13,7 +13,7 @@ namespace GeometricStructures
             }
             private set { }
         }
-        public float y
+        public double y
         {
             get
             {
@@ -22,14 +22,14 @@ namespace GeometricStructures
             private set { }
         }
 
-        public GeomPoint(float x, float y)
+        public GeomPoint(double x, double y)
         {
-            matrix = new Matrix(new float[,] { { x }, { y } });
+            matrix = new Matrix(new double[,] { { x }, { y } });
         }
 
-        public GeomPoint(float x, float y, float z)
+        public GeomPoint(double x, double y, double z)
         {
-            matrix = new Matrix(new float[,] { { x }, { y }, { z } });
+            matrix = new Matrix(new double[,] { { x }, { y }, { z } });
         }
 
         public GeomPoint(Matrix data)
@@ -62,12 +62,12 @@ namespace GeometricStructures
             return new GeomPoint(A.matrix * T);
         }
 
-        public static GeomPoint operator +(GeomPoint A, float x)
+        public static GeomPoint operator +(GeomPoint A, double x)
         {
             return new GeomPoint(A.matrix + x);
         }
 
-        public static GeomPoint operator -(GeomPoint A, float x)
+        public static GeomPoint operator -(GeomPoint A, double x)
         {
             return new GeomPoint(A.matrix - x);
         }

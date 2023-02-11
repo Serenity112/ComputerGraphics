@@ -4,12 +4,12 @@ namespace GeometricStructures
 {
     public class Matrix
     {
-        private float[,] data;
+        private double[,] data;
 
         public int NbRows { get; private set; }
 
         public int NbCols { get; private set; }
-        public float this[int i, int j]
+        public double this[int i, int j]
         {
             get
             {
@@ -35,16 +35,16 @@ namespace GeometricStructures
             NbRows = m;
             NbCols = n;
 
-            data = new float[m, n];
+            data = new double[m, n];
             FillMatrix(0);
         }
 
-        public Matrix(float[,] data)
+        public Matrix(double[,] data)
         {
             NbRows = data.GetLength(0);
             NbCols = data.GetLength(1);
 
-            this.data = new float[NbRows, NbCols];
+            this.data = new double[NbRows, NbCols];
 
             for (int i = 0; i < NbRows; i++)
             {
@@ -140,7 +140,7 @@ namespace GeometricStructures
             return res;
         }
 
-        public static Matrix operator +(Matrix A, float x)
+        public static Matrix operator +(Matrix A, double x)
         {
             Matrix res = new Matrix(A.NbRows, A.NbCols);
 
@@ -155,12 +155,12 @@ namespace GeometricStructures
             return res;
         }
 
-        public static Matrix operator -(Matrix A, float x)
+        public static Matrix operator -(Matrix A, double x)
         {
             return A + (-x);
         }
 
-        public static Matrix operator *(Matrix A, float x)
+        public static Matrix operator *(Matrix A, double x)
         {
             Matrix res = new Matrix(A.NbRows, A.NbCols);
 
@@ -175,9 +175,9 @@ namespace GeometricStructures
             return res;
         }
 
-        public float[,] ToArray()
+        public double[,] ToArray()
         {
-            float[,] arr = new float[NbRows, NbCols];
+            double[,] arr = new double[NbRows, NbCols];
 
             for (int i = 0; i < NbRows; i++)
             {
@@ -190,7 +190,7 @@ namespace GeometricStructures
             return arr;
         }
 
-        private void FillMatrix(float x)
+        private void FillMatrix(double x)
         {
             for (int i = 0; i < NbRows; i++)
             {

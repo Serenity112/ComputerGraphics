@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,16 +15,13 @@ namespace ComputerGraphics
 {
     public partial class Form1 : Form
     {
-        private GeomPoint coordinatesCenter;
-
         private int width;
         private int height;
-
 
         private Pen linesPen;
         private Pen pointPen;
 
-        Graphics G;
+        private Graphics G;
         public Form1()
         {
             InitializeComponent();
@@ -39,16 +37,16 @@ namespace ComputerGraphics
             width = pictureBox1.Width;
             height = pictureBox1.Height;
 
-            coordinatesCenter = new GeomPoint(width / 2, height / 2);
-
             G = pictureBox1.CreateGraphics();
+            G.TranslateTransform(width / 2, height / 2);
+            G.ScaleTransform(1, -1);
         }
 
 
         private void DrawCoordinates(Graphics G)
         {
-            DrawLine(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2));
-            DrawLine(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0));
+            DrawingUtil.DrawLine(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, linesPen);
+            DrawingUtil.DrawLine(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, linesPen);
         }
 
         private void DrawTangent(object sender, EventArgs e)
@@ -57,52 +55,64 @@ namespace ComputerGraphics
 
             DrawCoordinates(G);
 
+            ErrorMessage("");
+
             try
             {
-                float circle_x0 = float.Parse(textBox1.Text);
-                float circle_y0 = float.Parse(textBox2.Text);
-                float radius = float.Parse(textBox3.Text);
+                Circle circle = new Circle(new GeomPoint(double.Parse(textBox1.Text), double.Parse(textBox2.Text)), double.Parse(textBox3.Text));
 
-                Circle circle = new Circle(new GeomPoint(circle_x0, circle_y0), radius);
+                DrawingUtil.DrawEllipse(circle, G, linesPen);
 
-                float[] patametrs = CoordinatesUtil.ellipseToWFFormat(circle, coordinatesCenter);
 
-                GeomPoint targetPoint = new GeomPoint(float.Parse(textBox5.Text), float.Parse(textBox4.Text));
+                GeomPoint targetPoint = new GeomPoint(double.Parse(textBox5.Text), double.Parse(textBox4.Text));
 
-                if (CircleUtils.IfPointInsideCircle(targetPoint, circle))
+                if (Circle.IfPointInsideCircle(targetPoint, circle))
                 {
+                    ClearResultPoints();
                     throw new ArgumentException("Точка не может находиться внутри круга!");
                 }
 
-                G.DrawEllipse(linesPen, patametrs[0], patametrs[1], patametrs[2], patametrs[3]);
+                GeomPoint[] tangentPoints = Circle.GetTangentPoints(circle, targetPoint);
 
+                DrawingUtil.DrawLine(tangentPoints[0], targetPoint, G, pointPen);
 
-                GeomPoint[] tangentPoints = CircleUtils.GetTangentPointCoordinate(circle, targetPoint);
+                DrawingUtil.DrawLine(tangentPoints[1], targetPoint, G, pointPen);
 
-                DrawLine(tangentPoints[0], targetPoint);
+                DrawResultPoints(tangentPoints[0], tangentPoints[1]);
 
-                DrawLine(tangentPoints[1], targetPoint);
             }
             catch (ArgumentException ex)
             {
-                label13.Text = ex.Message;
+                ErrorMessage(ex.Message);
             }
             catch (Exception ex)
             {
-                label13.Text = "Ошибка ввода параметров!";
+                ErrorMessage("Ошибка ввода параметров!");
             }
 
         }
 
-        private void DrawLine(GeomPoint point1, GeomPoint point2)
+        private void DrawResultPoints(GeomPoint point1, GeomPoint point2)
         {
-            GeomPoint m_point1 = CoordinatesUtil.pointToWFFormat(point1, coordinatesCenter);
-            GeomPoint m_point2 = CoordinatesUtil.pointToWFFormat(point2, coordinatesCenter);
+            label14.Text = $"X1: {point1.x:0.000}";
+            label15.Text = $"Y1: {point1.y:0.000}";
 
-            PointF f_point1 = new PointF(m_point1.x, m_point1.y);
-            PointF f_point2 = new PointF(m_point2.x, m_point2.y);
+            label20.Text = $"X2: {point2.x:0.000}";
+            label21.Text = $"Y2: {point2.y:0.000}";
+        }
 
-            G.DrawLine(pointPen, f_point1, f_point2);
+        private void ClearResultPoints()
+        {
+            label14.Text = "";
+            label15.Text = "";
+
+            label21.Text = "";
+            label20.Text = "";
+        }
+
+        private void ErrorMessage(string error)
+        {
+            label13.Text = error;
         }
     }
 }

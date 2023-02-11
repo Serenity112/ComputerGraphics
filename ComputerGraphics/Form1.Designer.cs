@@ -49,13 +49,17 @@ namespace ComputerGraphics
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(819, 499);
+            this.button1.Location = new System.Drawing.Point(819, 376);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(139, 37);
             this.button1.TabIndex = 0;
@@ -220,16 +224,17 @@ namespace ComputerGraphics
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label13.ForeColor = System.Drawing.Color.Red;
-            this.label13.Location = new System.Drawing.Point(757, 549);
+            this.label13.Location = new System.Drawing.Point(742, 429);
+            this.label13.MinimumSize = new System.Drawing.Size(300, 100);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(0, 25);
+            this.label13.Size = new System.Drawing.Size(300, 100);
             this.label13.TabIndex = 21;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label11.Location = new System.Drawing.Point(743, 574);
+            this.label11.Location = new System.Drawing.Point(743, 559);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(290, 25);
             this.label11.TabIndex = 22;
@@ -244,11 +249,55 @@ namespace ComputerGraphics
             this.label12.Size = new System.Drawing.Size(0, 20);
             this.label12.TabIndex = 23;
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label14.Location = new System.Drawing.Point(767, 595);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(33, 20);
+            this.label14.TabIndex = 24;
+            this.label14.Text = "X1:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label15.Location = new System.Drawing.Point(767, 630);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(33, 20);
+            this.label15.TabIndex = 25;
+            this.label15.Text = "Y1:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label20.Location = new System.Drawing.Point(916, 630);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(33, 20);
+            this.label20.TabIndex = 29;
+            this.label20.Text = "Y2:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label21.Location = new System.Drawing.Point(916, 595);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(33, 20);
+            this.label21.TabIndex = 28;
+            this.label21.Text = "X2:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1045, 679);
+            this.ClientSize = new System.Drawing.Size(1238, 679);
+            this.Controls.Add(this.label20);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label14);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label13);
@@ -299,6 +348,10 @@ namespace ComputerGraphics
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
     }
 }
 
