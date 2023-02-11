@@ -225,6 +225,7 @@ namespace ComputerGraphics
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label13.ForeColor = System.Drawing.Color.Red;
             this.label13.Location = new System.Drawing.Point(742, 429);
+            this.label13.MaximumSize = new System.Drawing.Size(300, 100);
             this.label13.MinimumSize = new System.Drawing.Size(300, 100);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(300, 100);
@@ -238,7 +239,7 @@ namespace ComputerGraphics
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(290, 25);
             this.label11.TabIndex = 22;
-            this.label11.Text = "Координаты точки касания:";
+            this.label11.Text = "Координаты точек касания:";
             // 
             // label12
             // 
@@ -293,7 +294,7 @@ namespace ComputerGraphics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1238, 679);
+            this.ClientSize = new System.Drawing.Size(1036, 679);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.label21);
             this.Controls.Add(this.label15);
@@ -318,6 +319,7 @@ namespace ComputerGraphics
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

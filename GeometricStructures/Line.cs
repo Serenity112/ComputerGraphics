@@ -48,5 +48,10 @@ namespace GeometricStructures
             matrix = new Matrix(new double[,] { { x1, y1 }, { x2, y2 } });
         }
 
+        public static Line operator *(Line A, Matrix T)
+        {
+            return new Line(A.matrix * T);
+        }
+
     }
 }

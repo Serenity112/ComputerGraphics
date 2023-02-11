@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GeometricStructures
 {
-    public class DrawingUtil
+    public static class DrawingUtil
     {
         public static void DrawLine(GeomPoint point1, GeomPoint point2, Graphics G, Pen pen)
         {
@@ -25,6 +25,15 @@ namespace GeometricStructures
             double d = circle.radius * 2;
 
             G.DrawEllipse(pen, (float)x, (float)y, (float)d, (float)d);
+        }
+
+        public static void FillEllipse(Circle circle, Graphics G, Brush brush)
+        {
+            double x = circle.center.x - circle.radius;
+            double y = circle.center.y - circle.radius;
+            double d = circle.radius * 2;
+
+            G.FillEllipse(brush, (float)x, (float)y, (float)d, (float)d);
         }
     }
 }

@@ -61,15 +61,5 @@ namespace GeometricStructures
         {
             return new GeomPoint(A.matrix * T);
         }
-
-        public static GeomPoint operator +(GeomPoint A, double x)
-        {
-            return new GeomPoint(A.matrix + x);
-        }
-
-        public static GeomPoint operator -(GeomPoint A, double x)
-        {
-            return new GeomPoint(A.matrix - x);
-        }
     }
 }

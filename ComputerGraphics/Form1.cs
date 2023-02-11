@@ -1,15 +1,7 @@
 ﻿using GeometricStructures;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 
 namespace ComputerGraphics
 {
@@ -18,8 +10,10 @@ namespace ComputerGraphics
         private int width;
         private int height;
 
-        private Pen linesPen;
-        private Pen pointPen;
+        private Pen linesPen = new Pen(Color.Black);
+        private Pen pointPen = new Pen(Color.Red);
+
+        private Brush fillbrush = new SolidBrush(Color.Green);
 
         private Graphics G;
         public Form1()
@@ -28,11 +22,9 @@ namespace ComputerGraphics
 
             button1.Click += DrawTangent;
 
-            linesPen = new Pen(Color.Black);
             linesPen.Width = 1;
-
-            pointPen = new Pen(Color.Red);
             pointPen.Width = 2;
+
 
             width = pictureBox1.Width;
             height = pictureBox1.Height;
@@ -80,12 +72,15 @@ namespace ComputerGraphics
 
                 DrawResultPoints(tangentPoints[0], tangentPoints[1]);
 
+                DrawingUtil.FillEllipse(new Circle(tangentPoints[0], 3), G, fillbrush);
+                DrawingUtil.FillEllipse(new Circle(tangentPoints[1], 3), G, fillbrush);
+                DrawingUtil.FillEllipse(new Circle(targetPoint, 3), G, fillbrush);
             }
             catch (ArgumentException ex)
             {
                 ErrorMessage(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ErrorMessage("Ошибка ввода параметров!");
             }
@@ -97,8 +92,8 @@ namespace ComputerGraphics
             label14.Text = $"X1: {point1.x:0.000}";
             label15.Text = $"Y1: {point1.y:0.000}";
 
-            label20.Text = $"X2: {point2.x:0.000}";
-            label21.Text = $"Y2: {point2.y:0.000}";
+            label21.Text = $"X2: {point2.x:0.000}";
+            label20.Text = $"Y2: {point2.y:0.000}";
         }
 
         private void ClearResultPoints()
