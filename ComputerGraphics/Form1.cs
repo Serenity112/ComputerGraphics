@@ -99,8 +99,8 @@ namespace ComputerGraphics
             GeomPoint m_point1 = CoordinatesUtil.pointToWFFormat(point1, coordinatesCenter);
             GeomPoint m_point2 = CoordinatesUtil.pointToWFFormat(point2, coordinatesCenter);
 
-            PointF f_point1 = new PointF(m_point1[0, 0], m_point1[1, 0]);
-            PointF f_point2 = new PointF(m_point2[0, 0], m_point2[1, 0]);
+            PointF f_point1 = new PointF(m_point1.x, m_point1.y);
+            PointF f_point2 = new PointF(m_point2.x, m_point2.y);
 
             G.DrawLine(pointPen, f_point1, f_point2);
         }
