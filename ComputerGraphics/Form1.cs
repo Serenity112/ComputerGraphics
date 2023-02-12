@@ -10,10 +10,13 @@ namespace ComputerGraphics
         private int width;
         private int height;
 
-        private Pen linesPen = new Pen(Color.Black);
-        private Pen pointPen = new Pen(Color.Red);
+        private Brush greenBrush = new SolidBrush(Color.Green);
+        private Brush blackbrush = new SolidBrush(Color.Black);
+        private Brush redbrush = new SolidBrush(Color.Red);
 
-        private Brush fillbrush = new SolidBrush(Color.Green);
+        private double coordBrushWidth = 1;
+        private double linesBrushWidth = 2;
+        private double pointBrushWidth = 5;
 
         private Graphics G;
         public Form1()
@@ -21,10 +24,6 @@ namespace ComputerGraphics
             InitializeComponent();
 
             button1.Click += DrawTangent;
-
-            linesPen.Width = 1;
-            pointPen.Width = 2;
-
 
             width = pictureBox1.Width;
             height = pictureBox1.Height;
@@ -37,8 +36,8 @@ namespace ComputerGraphics
 
         private void DrawCoordinates(Graphics G)
         {
-            DrawingUtil.DrawLine(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, linesPen);
-            DrawingUtil.DrawLine(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, linesPen);
+            DrawingUtil.DrawLineBresenham(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, blackbrush, coordBrushWidth);
+            DrawingUtil.DrawLineBresenham(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, blackbrush, coordBrushWidth);
         }
 
         private void DrawTangent(object sender, EventArgs e)
@@ -52,29 +51,27 @@ namespace ComputerGraphics
             try
             {
                 Circle circle = new Circle(new GeomPoint(double.Parse(textBox1.Text), double.Parse(textBox2.Text)), double.Parse(textBox3.Text));
-
-                DrawingUtil.DrawEllipse(circle, G, linesPen);
-
+                DrawingUtil.DrawCircleBresenham(circle, G, blackbrush, linesBrushWidth);
 
                 GeomPoint targetPoint = new GeomPoint(double.Parse(textBox5.Text), double.Parse(textBox4.Text));
-
+                
                 if (Circle.IfPointInsideCircle(targetPoint, circle))
                 {
+                    DrawingUtil.DrawPixel(targetPoint, G, greenBrush, pointBrushWidth);
                     ClearResultPoints();
                     throw new ArgumentException("Точка не может находиться внутри круга!");
                 }
 
                 GeomPoint[] tangentPoints = Circle.GetTangentPoints(circle, targetPoint);
+                DrawingUtil.DrawLineBresenham(tangentPoints[0], targetPoint, G, redbrush, linesBrushWidth);
+                DrawingUtil.DrawLineBresenham(tangentPoints[1], targetPoint, G, redbrush, linesBrushWidth);
 
-                DrawingUtil.DrawLine(tangentPoints[0], targetPoint, G, pointPen);
+                PrintResultPoints(tangentPoints[0], tangentPoints[1]);
 
-                DrawingUtil.DrawLine(tangentPoints[1], targetPoint, G, pointPen);
+                DrawingUtil.DrawPixel(tangentPoints[0], G, greenBrush, pointBrushWidth);
+                DrawingUtil.DrawPixel(tangentPoints[1], G, greenBrush, pointBrushWidth);
+                DrawingUtil.DrawPixel(targetPoint, G, greenBrush, pointBrushWidth);
 
-                DrawResultPoints(tangentPoints[0], tangentPoints[1]);
-
-                DrawingUtil.FillEllipse(new Circle(tangentPoints[0], 3), G, fillbrush);
-                DrawingUtil.FillEllipse(new Circle(tangentPoints[1], 3), G, fillbrush);
-                DrawingUtil.FillEllipse(new Circle(targetPoint, 3), G, fillbrush);
             }
             catch (ArgumentException ex)
             {
@@ -87,7 +84,7 @@ namespace ComputerGraphics
 
         }
 
-        private void DrawResultPoints(GeomPoint point1, GeomPoint point2)
+        private void PrintResultPoints(GeomPoint point1, GeomPoint point2)
         {
             label14.Text = $"X1: {point1.x:0.000}";
             label15.Text = $"Y1: {point1.y:0.000}";
