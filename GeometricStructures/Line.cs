@@ -30,7 +30,7 @@ namespace GeometricStructures
                 throw new Exception("Ошибка создания линии, она должна содержать 2 колонки.");
             }
 
-            if (data.NbCols != 2)
+            if (data.NbRows != 2)
             {
                 throw new Exception("Ошибка создания линии, она должна содержать 2 ряда");
             }

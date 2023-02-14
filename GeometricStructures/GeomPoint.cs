@@ -67,5 +67,9 @@ namespace GeometricStructures
             return new GeomPoint(A.matrix * x);
         }
 
+        public double distance(GeomPoint B)
+        {
+            return Math.Sqrt(Math.Pow(x - B.x, 2) + Math.Pow(y - B.y, 2));
+        }
     }
 }

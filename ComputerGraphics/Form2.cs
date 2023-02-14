@@ -1,15 +1,8 @@
 ﻿using GeometricStructures;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace ComputerGraphics
 {
@@ -74,6 +67,11 @@ namespace ComputerGraphics
                 }
             }
 
+            if (curvePoints.Count < 4)
+            {
+                throw new Exception("Недостаточно точек для кривой");
+            }
+
             return curvePoints;
         }
 
@@ -82,6 +80,7 @@ namespace ComputerGraphics
             DrawingUtil.DrawLineBresenham(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, blackbrush, coordBrushWidth);
             DrawingUtil.DrawLineBresenham(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, blackbrush, coordBrushWidth);
         }
+
         private void DrawBezierCurve(object sender, EventArgs e)
         {
             ErrorMesssage("");
@@ -90,13 +89,22 @@ namespace ComputerGraphics
 
             DrawCoordinates(G);
 
-            List<GeomPoint> curvePoints = ReadCurvePoints();
+            try
+            {
+                List<GeomPoint> curvePoints = ReadCurvePoints();
 
-            DrawShapeLine(curvePoints);
+                DrawShapeLine(curvePoints);
 
-            List<GeomPoint> segmentedPoints = SegmentPoints(curvePoints);
+                List<GeomPoint> segmentedPoints = SegmentPoints(curvePoints);
 
-            DrawBezier(segmentedPoints);
+                DrawBezier(segmentedPoints);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorMesssage(ex.Message);
+            }
+
         }
 
         private static GeomPoint P(double t, List<GeomPoint> points)
@@ -106,14 +114,14 @@ namespace ComputerGraphics
             return new GeomPoint(x, y);
         }
 
-
         private void DrawShapeLine(List<GeomPoint> curvePoints)
         {
-            for(int i = 1; i < curvePoints.Count; i++)
+            for (int i = 1; i < curvePoints.Count; i++)
             {
-                DrawingUtil.DrawLineBresenham(curvePoints[i-1], curvePoints[i], G, blackbrush, linesBrushWidth);
+                DrawingUtil.DrawLineBresenham(curvePoints[i - 1], curvePoints[i], G, blackbrush, linesBrushWidth);
             }
         }
+
         private void DrawBezier(List<GeomPoint> curvePoints)
         {
             int counter = 0;
@@ -121,10 +129,17 @@ namespace ComputerGraphics
             while (counter < curvePoints.Count - 1)
             {
                 List<GeomPoint> currPoints = curvePoints.GetRange(counter, 4);
-                
-                for (int i = 0; i <= 150; i++)
+
+                double accuracy = 0;
+
+                for (int i = 1; i < 4; i++)
                 {
-                    double t = i / 150.0;
+                    accuracy += currPoints[i - 1].distance(currPoints[i]);
+                }
+
+                for (int i = 0; i <= accuracy; i++)
+                {
+                    double t = i / accuracy;
 
                     DrawingUtil.DrawPixel(P(t, currPoints), G, redbrush, 2f);
                 }
