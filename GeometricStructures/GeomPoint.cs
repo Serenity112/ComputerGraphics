@@ -39,7 +39,7 @@ namespace GeometricStructures
                 throw new Exception("Ошибка создания точки, она должна содержать одну колонку.");
             }
 
-            if (data.NbCols != 2 || data.NbCols != 3)
+            if (data.NbRows != 2 && data.NbRows != 3)
             {
                 throw new Exception("Ошибка создания точки, она должна иметь только 2 или 3 ряда.");
             }
@@ -61,5 +61,11 @@ namespace GeometricStructures
         {
             return new GeomPoint(A.matrix * T);
         }
+
+        public static GeomPoint operator *(GeomPoint A, double x)
+        {
+            return new GeomPoint(A.matrix * x);
+        }
+
     }
 }
