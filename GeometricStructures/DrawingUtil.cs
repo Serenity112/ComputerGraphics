@@ -5,24 +5,15 @@ namespace GeometricStructures
 {
     public static class DrawingUtil
     {
-        public static void FillEllipse(Circle circle, Graphics G, Brush brush)
-        {
-            double x = circle.center.x - circle.radius;
-            double y = circle.center.y - circle.radius;
-            double d = circle.radius * 2;
-
-            G.FillEllipse(brush, (float)x, (float)y, (float)d, (float)d);
-        }
-
         public static void DrawLineBresenham(GeomPoint point1, GeomPoint point2, Graphics G, Brush brush, double brushWidth)
         {
-            int x = Convert.ToInt32(point1.x);
-            int y = Convert.ToInt32(point1.y);
+            int x1 = Convert.ToInt32(point1.x);
+            int y1 = Convert.ToInt32(point1.y);
             int x2 = Convert.ToInt32(point2.x);
             int y2 = Convert.ToInt32(point2.y);
 
-            int w = x2 - x;
-            int h = y2 - y;
+            int w = x2 - x1;
+            int h = y2 - y1;
 
             int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
             if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
@@ -45,20 +36,20 @@ namespace GeometricStructures
 
             for (int i = 0; i <= longest; i++)
             {
-                DrawPixel(x, y, G, brush, brushWidth);
+                DrawPixel(x1, y1, G, brush, brushWidth);
 
                 numerator += shortest;
 
                 if (numerator >= longest)
                 {
                     numerator -= longest;
-                    x += dx1;
-                    y += dy1;
+                    x1 += dx1;
+                    y1 += dy1;
                 }
                 else
                 {
-                    x += dx2;
-                    y += dy2;
+                    x1 += dx2;
+                    y1 += dy2;
                 }
             }
         }
@@ -82,7 +73,7 @@ namespace GeometricStructures
                 if (d > 0)
                 {
                     y--;
-                    d = d + 4 * (x - y) + 10;
+                    d = d + 4 * (x - y) + 10; 
                 }
                 else
                 {

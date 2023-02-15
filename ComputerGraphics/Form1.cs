@@ -54,7 +54,7 @@ namespace ComputerGraphics
                 DrawingUtil.DrawCircleBresenham(circle, G, blackbrush, linesBrushWidth);
 
                 GeomPoint targetPoint = new GeomPoint(double.Parse(textBox5.Text), double.Parse(textBox4.Text));
-                
+
                 if (Circle.IfPointInsideCircle(targetPoint, circle))
                 {
                     DrawingUtil.DrawPixel(targetPoint, G, greenBrush, pointBrushWidth);

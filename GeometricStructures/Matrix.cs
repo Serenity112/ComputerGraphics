@@ -25,11 +25,11 @@ namespace GeometricStructures
         {
             if (m < 1)
             {
-                throw new Exception($"Ошибка создания матрицы, значение m должно быть >= 1.");
+                throw new Exception($"Ошибка создания матрицы, значение рядов m должно быть >= 1.");
             }
             if (n < 1)
             {
-                throw new Exception($"Ошибка создания матрицы, значение n должно быть >= 1.");
+                throw new Exception($"Ошибка создания матрицы, значение колонок n должно быть >= 1.");
             }
 
             NbRows = m;
@@ -43,6 +43,15 @@ namespace GeometricStructures
         {
             NbRows = data.GetLength(0);
             NbCols = data.GetLength(1);
+
+            if (NbRows < 1)
+            {
+                throw new Exception($"Ошибка создания матрицы, значение рядов должно быть >= 1.");
+            }
+            if (NbCols < 1)
+            {
+                throw new Exception($"Ошибка создания матрицы, значение колонок должно быть >= 1.");
+            }
 
             this.data = new double[NbRows, NbCols];
 
