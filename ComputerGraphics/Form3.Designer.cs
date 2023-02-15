@@ -86,7 +86,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(74, 26);
             this.textBox2.TabIndex = 4;
-            this.textBox2.Text = "300";
+            this.textBox2.Text = "-250";
             // 
             // textBox3
             // 
@@ -95,7 +95,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(74, 26);
             this.textBox3.TabIndex = 6;
-            this.textBox3.Text = "300";
+            this.textBox3.Text = "-100";
             // 
             // textBox4
             // 
@@ -122,7 +122,7 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(74, 26);
             this.textBox6.TabIndex = 8;
-            this.textBox6.Text = "-100";
+            this.textBox6.Text = "-300";
             // 
             // textBox7
             // 
@@ -131,7 +131,7 @@
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(74, 26);
             this.textBox7.TabIndex = 9;
-            this.textBox7.Text = "-300";
+            this.textBox7.Text = "300";
             // 
             // textBox8
             // 
@@ -140,7 +140,7 @@
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(74, 26);
             this.textBox8.TabIndex = 10;
-            this.textBox8.Text = "-100";
+            this.textBox8.Text = "0";
             // 
             // Form3
             // 

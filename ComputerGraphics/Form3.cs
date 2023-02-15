@@ -67,21 +67,20 @@ namespace ComputerGraphics
 
             List<GeomPoint> formingPoints = ReadFormingPoints();
 
-            double density = 0.009;
+            double step = 0.1;
 
-            List<GeomPoint> surfacePoints = new List<GeomPoint>();
-            for (double u = 0; u <= 1; u += density)
+            for (double c1 = 0; c1 <= 1; c1 += step)
             {
-                for (double v = 0; v <= 1; v += density)
-                {
-                    GeomPoint point = BilinearInterpolation(formingPoints, u, v);
-                    surfacePoints.Add(point);
-                }
+                GeomPoint point1 = BilinearInterpolation(formingPoints, 0, c1);
+                GeomPoint point2 = BilinearInterpolation(formingPoints, 1, c1);
+                DrawingUtil.DrawLineBresenham(point1, point2, G, blackbrush, linesBrushWidth);
             }
 
-            foreach(GeomPoint point in surfacePoints)
+            for (double c2 = 0; c2 <= 1; c2 += step)
             {
-                DrawingUtil.DrawPixel(point, G, blackbrush, linesBrushWidth);
+                GeomPoint point1 = BilinearInterpolation(formingPoints, c2, 0);
+                GeomPoint point2 = BilinearInterpolation(formingPoints, c2, 1);
+                DrawingUtil.DrawLineBresenham(point1, point2, G, blackbrush, linesBrushWidth);
             }
         }
 
