@@ -62,11 +62,19 @@ namespace GeometricStructures
             return new GeomPoint(A.matrix * T);
         }
 
+        public static GeomPoint operator *(Matrix T, GeomPoint A)
+        {
+            return new GeomPoint(T * A.matrix);
+        }
+
         public static GeomPoint operator *(GeomPoint A, double x)
         {
             return new GeomPoint(A.matrix * x);
         }
-
+        public static GeomPoint operator *(double x, GeomPoint A)
+        {
+            return new GeomPoint(x * A.matrix);
+        }
         public double distance(GeomPoint B)
         {
             return Math.Sqrt(Math.Pow(x - B.x, 2) + Math.Pow(y - B.y, 2));

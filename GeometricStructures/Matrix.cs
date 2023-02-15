@@ -175,6 +175,11 @@ namespace GeometricStructures
             return res;
         }
 
+        public static Matrix operator *(double x, Matrix A)
+        {
+            return A*x;
+        }
+
         public double[,] ToArray()
         {
             double[,] arr = new double[NbRows, NbCols];
