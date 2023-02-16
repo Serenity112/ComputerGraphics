@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace ComputerGraphics
@@ -19,7 +20,10 @@ namespace ComputerGraphics
         private double coordBrushWidth = 1;
         private double linesBrushWidth = 2;
 
-        private List<TextBox> textBoxes;
+        private const int startPositionX = 1108, startPositionY = 209;
+        private const int offsetX = 61, offsetY = 45;
+
+        private List<TextBox> textBoxes = new List<TextBox>();
 
         public Form2()
         {
@@ -34,12 +38,19 @@ namespace ComputerGraphics
             G.TranslateTransform(width / 2, height / 2);
             G.ScaleTransform(1, -1);
 
-            textBoxes = new List<TextBox>();
+            InitDefaultTextBoxes(pointsCount);
+        }
 
-            for (int i = 1; i <= 40; i++)
+        // Initializes default values for Bezier line coordinates
+        private void InitDefaultTextBoxes(Control pointsCountControl)
+        {
+            string[] defaultCoords = { "-500", "50", "-400", "70", "-300", "-100", "-120", "100", "0", "0",
+                "100", "-140", "200", "-10", "300", "-20", "400", "-100", "500", "100" };
+
+            for (int i = 0; i < 10; i++)
             {
-                string name = "textBox" + i;
-                textBoxes.Add((TextBox)(Controls.Find(name, false)[0]));
+                CreateCoordinatesTextBox("coordX" + i, new Point(startPositionX, startPositionY + i * offsetY), defaultCoords[2 * i]);
+                CreateCoordinatesTextBox("coordY" + i, new Point(startPositionX + offsetX, startPositionY + i * offsetY), defaultCoords[2 * i + 1]);
             }
         }
 
@@ -49,27 +60,21 @@ namespace ComputerGraphics
 
             for (int i = 0; i < textBoxes.Count; i += 2)
             {
-                TextBox tb1 = textBoxes[i];
-                TextBox tb2 = textBoxes[i + 1];
+                TextBox tb1 = textBoxes[i], tb2 = textBoxes[i + 1];
+                if (tb1.Text == "" || tb2.Text == "")
+                {
+                    throw new Exception("Не все поля заполнены!");
+                }
 
                 try
                 {
-                    if (tb1.Text != "" && tb2.Text != "")
-                    {
-                        double x = Convert.ToDouble(tb1.Text);
-                        double y = Convert.ToDouble(tb2.Text);
-                        curvePoints.Add(new GeomPoint(x, y));
-                    }
+                    double x = Convert.ToDouble(tb1.Text), y = Convert.ToDouble(tb2.Text);
+                    curvePoints.Add(new GeomPoint(x, y));
                 }
                 catch (Exception)
                 {
-                    ErrorMesssage("Ошибка чтения координат!");
+                    ErrorMessage("Ошибка чтения координат");
                 }
-            }
-
-            if (curvePoints.Count < 4)
-            {
-                throw new Exception("Недостаточно точек для кривой");
             }
 
             return curvePoints;
@@ -83,7 +88,7 @@ namespace ComputerGraphics
 
         private void DrawBezierCurve(object sender, EventArgs e)
         {
-            ErrorMesssage("");
+            ErrorMessage("");
 
             G.Clear(Color.White);
 
@@ -102,7 +107,7 @@ namespace ComputerGraphics
             }
             catch (Exception ex)
             {
-                ErrorMesssage(ex.Message);
+                ErrorMessage(ex.Message);
             }
 
         }
@@ -187,9 +192,57 @@ namespace ComputerGraphics
             return segmentedPoins;
         }
 
-        private void ErrorMesssage(string error)
+        private void ErrorMessage(string error)
         {
             label4.Text = error;
+        }
+
+        // Динамически создает поле одной координаты точки для кривой Безье
+        private void CreateCoordinatesTextBox(string name, Point position, string text = "")
+        {
+            TextBox coordTextBox = new TextBox()
+            {
+                Name = name,
+                Location = new Point(position.X, position.Y),
+                Size = new Size(55, 29),
+                Text = text
+            };
+            textBoxes.Add(coordTextBox);
+            Controls.Add(coordTextBox);
+        }
+
+        // Удаляет последние два поля, представляющие координату точки
+        private void RemoveLastCoordinatesTextBox()
+        {
+            Controls.Remove(textBoxes[textBoxes.Count - 1]);
+            Controls.Remove(textBoxes[textBoxes.Count - 2]);
+            textBoxes.RemoveRange(textBoxes.Count - 2, 2);
+        }
+
+        // Вызывается, когда значение поля [pointsCount] изменяется
+        private void pointsCount_ValueChanged(object sender, EventArgs e)
+        {
+            int initialCount = textBoxes.Count / 2;
+            int difference = (int)pointsCount.Value - initialCount;
+            
+            // Если разница в значении и в количестве координат меньше нуля, то лишнии координаты удаляются
+            if (difference < 0)
+            {
+                for (int i = 0; i < -difference; i++)
+                {
+                    RemoveLastCoordinatesTextBox();
+                }
+            }
+            // Если разница больше нуля, добавляются необходимые поля с координатами
+            else
+            {
+                for (int i = 0; i < difference; i++)
+                {
+                    int order = (initialCount + i);
+                    CreateCoordinatesTextBox("coordX" + order, new Point(startPositionX, startPositionY + offsetY * order));
+                    CreateCoordinatesTextBox("coordY" + order, new Point(startPositionX + offsetX, startPositionY + offsetY * order));
+                }
+            }
         }
     }
 }
