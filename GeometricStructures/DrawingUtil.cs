@@ -5,6 +5,26 @@ namespace GeometricStructures
 {
     public static class DrawingUtil
     {
+        private static Font defaultFont = new Font("Microsoft Sans Serif", 14, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+
+        public static void DrawCoordinates(Graphics G, double width, double height, Brush brush, int mark)
+        {
+            for (int i = 0; i >= -height / 2; i -= mark)
+            {
+                G.DrawString((-i).ToString(), defaultFont, brush, 0, i);
+                G.DrawString(i.ToString(), defaultFont, brush, 0, -i);
+            }
+
+            for (int i = mark; i <= width / 2; i += mark)
+            {
+                G.DrawString(i.ToString(), defaultFont, brush, i, 0);
+                G.DrawString((-i).ToString(), defaultFont, brush, -i, 0);
+            }
+
+            DrawingUtil.DrawLineBresenham(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, brush, 1);
+            DrawingUtil.DrawLineBresenham(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, brush, 1);
+        }
+
         public static void DrawLineBresenham(GeomPoint point1, GeomPoint point2, Graphics G, Brush brush, double brushWidth)
         {
             int x1 = Convert.ToInt32(point1.x);

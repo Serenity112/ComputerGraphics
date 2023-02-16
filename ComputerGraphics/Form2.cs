@@ -92,7 +92,9 @@ namespace ComputerGraphics
 
             G.Clear(Color.White);
 
-            DrawCoordinates(G);
+            G.ScaleTransform(1, -1);
+            DrawingUtil.DrawCoordinates(G, width, height, blackbrush, 50);
+            G.ScaleTransform(1, -1);
 
             try
             {
