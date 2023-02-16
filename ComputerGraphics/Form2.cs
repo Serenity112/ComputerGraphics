@@ -41,7 +41,7 @@ namespace ComputerGraphics
             InitDefaultTextBoxes(pointsCount);
         }
 
-        // Initializes default values for Bezier line coordinates
+        // Инициализирует начальные поля координаты точки кривой Безье
         private void InitDefaultTextBoxes(Control pointsCountControl)
         {
             string[] defaultCoords = { "-500", "50", "-400", "70", "-300", "-100", "-120", "100", "0", "0",
