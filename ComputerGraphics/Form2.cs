@@ -80,12 +80,6 @@ namespace ComputerGraphics
             return curvePoints;
         }
 
-        private void DrawCoordinates(Graphics G)
-        {
-            DrawingUtil.DrawLineBresenham(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, blackbrush, coordBrushWidth);
-            DrawingUtil.DrawLineBresenham(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, blackbrush, coordBrushWidth);
-        }
-
         private void DrawBezierCurve(object sender, EventArgs e)
         {
             ErrorMessage("");
@@ -93,7 +87,7 @@ namespace ComputerGraphics
             G.Clear(Color.White);
 
             G.ScaleTransform(1, -1);
-            DrawingUtil.DrawCoordinates(G, width, height, blackbrush, 50);
+            DrawingUtil.DrawCoordinates2D(G, width, height, blackbrush, 50);
             G.ScaleTransform(1, -1);
 
             try

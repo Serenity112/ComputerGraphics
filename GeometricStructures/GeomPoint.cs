@@ -22,9 +22,18 @@ namespace GeometricStructures
             private set { }
         }
 
+        public double z
+        {
+            get
+            {
+                return matrix[2, 0];
+            }
+            private set { }
+        }
+
         public GeomPoint(double x, double y)
         {
-            matrix = new Matrix(new double[,] { { x }, { y } });
+            matrix = new Matrix(new double[,] { { x }, { y }, { 0 } });
         }
 
         public GeomPoint(double x, double y, double z)
@@ -46,6 +55,8 @@ namespace GeometricStructures
 
             matrix = data;
         }
+
+        public GeomPoint(double[,] data) : this(new Matrix(data)) { }
 
         public static GeomPoint operator +(GeomPoint A, GeomPoint B)
         {
@@ -71,13 +82,15 @@ namespace GeometricStructures
         {
             return new GeomPoint(A.matrix * x);
         }
+
         public static GeomPoint operator *(double x, GeomPoint A)
         {
             return new GeomPoint(x * A.matrix);
         }
+
         public double distance(GeomPoint B)
         {
-            return Math.Sqrt(Math.Pow(x - B.x, 2) + Math.Pow(y - B.y, 2));
+            return Math.Sqrt(Math.Pow(x - B.x, 2) + Math.Pow(y - B.y, 2) + Math.Pow(z - B.z, 2));
         }
     }
 }

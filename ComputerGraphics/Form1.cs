@@ -14,7 +14,6 @@ namespace ComputerGraphics
         private Brush blackbrush = new SolidBrush(Color.Black);
         private Brush redbrush = new SolidBrush(Color.Red);
 
-        private double coordBrushWidth = 1;
         private double linesBrushWidth = 2;
         private double pointBrushWidth = 5;
 
@@ -31,7 +30,6 @@ namespace ComputerGraphics
             G = pictureBox1.CreateGraphics();
             G.TranslateTransform(width / 2, height / 2);
             G.ScaleTransform(1, -1);
-
         }
 
         private void DrawTangent(object sender, EventArgs e)
@@ -39,7 +37,7 @@ namespace ComputerGraphics
             G.Clear(Color.White);
 
             G.ScaleTransform(1, -1);
-            DrawingUtil.DrawCoordinates(G, width, height, blackbrush, 50);
+            DrawingUtil.DrawCoordinates2D(G, width, height, blackbrush, 50);
             G.ScaleTransform(1, -1);
 
             ErrorMessage("");

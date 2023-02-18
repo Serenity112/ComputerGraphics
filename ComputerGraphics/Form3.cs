@@ -1,14 +1,7 @@
 ﻿using GeometricStructures;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ComputerGraphics
@@ -21,6 +14,8 @@ namespace ComputerGraphics
         private Graphics G;
 
         private Brush blackbrush = new SolidBrush(Color.Black);
+        private Brush blueBrush = new SolidBrush(Color.Blue);
+        private Brush redBrush = new SolidBrush(Color.Red);
 
         private double coordBrushWidth = 1;
         private double linesBrushWidth = 1;
@@ -38,34 +33,61 @@ namespace ComputerGraphics
             G.TranslateTransform(width / 2, height / 2);
             G.ScaleTransform(1, -1);
         }
-        private void DrawCoordinates(Graphics G)
-        {
-            DrawingUtil.DrawLineBresenham(new GeomPoint(0, -height / 2), new GeomPoint(0, height / 2), G, blackbrush, coordBrushWidth);
-            DrawingUtil.DrawLineBresenham(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, blackbrush, coordBrushWidth);
-        }
 
         private List<GeomPoint> ReadFormingPoints()
         {
+            GeomPoint viewPoint = new GeomPoint(0, 0, 0);
+
             List<GeomPoint> points = new List<GeomPoint>();
 
             try
             {
-                points.Add(new GeomPoint(Int32.Parse(textBox1.Text), Int32.Parse(textBox2.Text)));
-                points.Add(new GeomPoint(Int32.Parse(textBox3.Text), Int32.Parse(textBox4.Text)));
-                points.Add(new GeomPoint(Int32.Parse(textBox5.Text), Int32.Parse(textBox6.Text)));
-                points.Add(new GeomPoint(Int32.Parse(textBox7.Text), Int32.Parse(textBox8.Text)));
-            } catch (Exception) { }
+                points.Add(new GeomPoint(Int32.Parse(textBox1.Text), Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text)));
+                points.Add(new GeomPoint(Int32.Parse(textBox4.Text), Int32.Parse(textBox5.Text), Int32.Parse(textBox6.Text)));
+                points.Add(new GeomPoint(Int32.Parse(textBox7.Text), Int32.Parse(textBox8.Text), Int32.Parse(textBox9.Text)));
+                points.Add(new GeomPoint(Int32.Parse(textBox10.Text), Int32.Parse(textBox11.Text), Int32.Parse(textBox12.Text)));
+            }
+            catch (Exception) { }
 
             return points;
+        }
+
+        private List<GeomPoint> ShiftPerspective(List<GeomPoint> formingPoints)
+        {
+            List<GeomPoint> shifted_points = new List<GeomPoint>();
+
+            GeomPoint VectorZoffset = new GeomPoint(-1, -1);
+
+            foreach (GeomPoint point in formingPoints)
+            {
+                float old_X = (float)point.x;
+                float old_Y = (float)point.y;
+                float old_Z = (float)point.z;
+
+                float new_X = (float)(point.x + point.z * VectorZoffset.x);
+                float new_Y = (float)(point.y + point.z * VectorZoffset.y);
+
+                shifted_points.Add(new GeomPoint(new_X, new_Y, old_Z));
+
+                G.DrawString(old_X.ToString() + " " + old_Y.ToString() + " " + old_Z.ToString(), this.Font, redBrush, new_X, -new_Y);
+            }
+
+            return shifted_points;
         }
 
         private void DrawSurface(object sender, EventArgs e)
         {
             G.Clear(Color.White);
 
-            DrawCoordinates(G);
+            G.ScaleTransform(1, -1);
+
+            DrawingUtil.DrawCoordinates3D(G, width, height, blackbrush, 50);
 
             List<GeomPoint> formingPoints = ReadFormingPoints();
+
+            formingPoints = ShiftPerspective(formingPoints);
+
+            G.ScaleTransform(1, -1);
 
             double step = 0.1;
 
@@ -73,14 +95,14 @@ namespace ComputerGraphics
             {
                 GeomPoint point1 = BilinearInterpolation(formingPoints, 0, c1);
                 GeomPoint point2 = BilinearInterpolation(formingPoints, 1, c1);
-                DrawingUtil.DrawLineBresenham(point1, point2, G, blackbrush, linesBrushWidth);
+                DrawingUtil.DrawLineBresenham(point1, point2, G, blueBrush, linesBrushWidth);
             }
 
             for (double c2 = 0; c2 <= 1; c2 += step)
             {
                 GeomPoint point1 = BilinearInterpolation(formingPoints, c2, 0);
                 GeomPoint point2 = BilinearInterpolation(formingPoints, c2, 1);
-                DrawingUtil.DrawLineBresenham(point1, point2, G, blackbrush, linesBrushWidth);
+                DrawingUtil.DrawLineBresenham(point1, point2, G, blueBrush, linesBrushWidth);
             }
         }
 
