@@ -89,7 +89,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(74, 26);
             this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "300";
+            this.textBox1.Text = "100";
             // 
             // label1
             // 
@@ -108,7 +108,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(74, 26);
             this.textBox2.TabIndex = 4;
-            this.textBox2.Text = "-250";
+            this.textBox2.Text = "100";
             // 
             // textBox3
             // 
@@ -153,7 +153,7 @@
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(74, 26);
             this.textBox7.TabIndex = 9;
-            this.textBox7.Text = "-300";
+            this.textBox7.Text = "300";
             // 
             // textBox8
             // 
@@ -162,7 +162,7 @@
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(74, 26);
             this.textBox8.TabIndex = 10;
-            this.textBox8.Text = "-100";
+            this.textBox8.Text = "100";
             // 
             // textBox9
             // 
@@ -180,7 +180,7 @@
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(74, 26);
             this.textBox10.TabIndex = 12;
-            this.textBox10.Text = "100";
+            this.textBox10.Text = "300";
             // 
             // textBox11
             // 
@@ -189,7 +189,7 @@
             this.textBox11.Name = "textBox11";
             this.textBox11.Size = new System.Drawing.Size(74, 26);
             this.textBox11.TabIndex = 13;
-            this.textBox11.Text = "-40";
+            this.textBox11.Text = "300";
             // 
             // textBox12
             // 
@@ -367,7 +367,7 @@
             this.textBox13.Name = "textBox13";
             this.textBox13.Size = new System.Drawing.Size(74, 26);
             this.textBox13.TabIndex = 31;
-            this.textBox13.Text = "90";
+            this.textBox13.Text = "10";
             // 
             // textBox14
             // 
@@ -376,7 +376,7 @@
             this.textBox14.Name = "textBox14";
             this.textBox14.Size = new System.Drawing.Size(74, 26);
             this.textBox14.TabIndex = 32;
-            this.textBox14.Text = "90";
+            this.textBox14.Text = "10";
             // 
             // Form3
             // 

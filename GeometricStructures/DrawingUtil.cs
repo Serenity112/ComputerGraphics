@@ -27,22 +27,25 @@ namespace GeometricStructures
 
         public static void DrawCoordinates3D(Graphics G, double width, double height, Brush brush, int mark)
         {
-            for (int i = 0; i >= -height / 2; i -= mark)
+            for (int y = 0; y >= -height / 2; y -= mark)
             {
-                G.DrawString((-i).ToString(), defaultFont, brush, 0, i);
-                G.DrawString(i.ToString(), defaultFont, brush, 0, -i);
+                G.DrawString((-y).ToString(), defaultFont, brush, 0, y);
+                G.DrawString(y.ToString(), defaultFont, brush, 0, -y);
             }
 
-            for (int i = mark; i <= width / 2; i += mark)
+            for (int x = mark; x <= width / 2; x += mark)
             {
-                G.DrawString(i.ToString(), defaultFont, brush, i, 0);
-                G.DrawString((-i).ToString(), defaultFont, brush, -i, 0);
+                G.DrawString(x.ToString(), defaultFont, brush, x, 0);
+                G.DrawString((-x).ToString(), defaultFont, brush, -x, 0);
             }
 
-            for (int i = mark; i <= width / 2; i += mark)
+            for (int z = mark; z <= Math.Sqrt(Math.Pow(width / 2, 2) + Math.Pow(height / 2, 2)); z += mark)
             {
-                G.DrawString((-i).ToString(), defaultFont, brush, (float)i / 2, (float)(-(i / 2) * Math.Tan(Math.PI / 4)));
-                G.DrawString(i.ToString(), defaultFont, brush, (float)(-i / 2), (float)((i / 2) * Math.Tan(Math.PI / 4)));
+                float new_X = (float)(0 - z);
+                float new_Y = (float)(0 - z);
+
+                G.DrawString(z.ToString(), defaultFont, brush, new_X, -new_Y);
+                G.DrawString((-z).ToString(), defaultFont, brush, -new_X, new_Y);
             }
 
             DrawLineBresenham(new GeomPoint(-width / 2, (width/2) *  Math.Tan(Math.PI/4)), new GeomPoint(width / 2, -(width / 2) * Math.Tan(Math.PI / 4)), G, brush, 1);

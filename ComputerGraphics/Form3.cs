@@ -72,18 +72,12 @@ namespace ComputerGraphics
         {
             List<GeomPoint> shifted_points = new List<GeomPoint>();
 
-            GeomPoint VectorZoffset = new GeomPoint(-1, -1);
-
             foreach (GeomPoint point in formingPoints)
             {
-                float old_X = (float)point.x;
-                float old_Y = (float)point.y;
-                float old_Z = (float)point.z;
+                float new_X = (float)(point.x - point.z);
+                float new_Y = (float)(point.y - point.z);
 
-                float new_X = (float)(point.x + point.z * VectorZoffset.x);
-                float new_Y = (float)(point.y + point.z * VectorZoffset.y);
-
-                shifted_points.Add(new GeomPoint(new_X, new_Y, old_Z));
+                shifted_points.Add(new GeomPoint(new_X, new_Y, (float)point.z));
             }
 
             return shifted_points;
