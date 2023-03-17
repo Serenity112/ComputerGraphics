@@ -186,7 +186,7 @@ namespace GeometricStructures
 
         public static Matrix operator *(double x, Matrix A)
         {
-            return A*x;
+            return A * x;
         }
 
         public double[,] ToArray()

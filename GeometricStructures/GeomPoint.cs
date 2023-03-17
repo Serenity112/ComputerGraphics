@@ -21,7 +21,6 @@ namespace GeometricStructures
             }
             private set { }
         }
-
         public double z
         {
             get
