@@ -117,7 +117,6 @@ namespace ComputerGraphics
                 p1.y < y_bottom && p2.y < y_bottom ||
                 p1.y > y_top && p2.y > y_top)
                 {
-                    //DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _purpleBrush, _windowWidth);
                     continue; 
                 }
 
@@ -127,7 +126,7 @@ namespace ComputerGraphics
                 p1.y > y_bottom && p2.y > y_bottom &&
                 p1.y < y_top && p2.y < y_top)
                 {
-                    DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _greenBrush, _windowWidth);
+                    DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _purpleBrush, 2);
                     continue; 
                 }
 
@@ -156,13 +155,12 @@ namespace ComputerGraphics
                 if (pt3.x <= x_right && pt3.x >= x_left)
                     collisions.Add(pt3);
 
-                if (pt4.x >= x_right && pt4.x <= x_left)
+                if (pt4.x <= x_right && pt4.x >= x_left)
                     collisions.Add(pt4);
 
                 // Нетривиальная невидимость
                 if (collisions.Count == 0)
                 {
-                    DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _blueBrush, _windowWidth);
                     continue;
                 }
 
@@ -171,11 +169,11 @@ namespace ComputerGraphics
                 {
                     GeomPoint innerPoint = new GeomPoint(0, 0);
 
-                    if(p1.x >= x_left && p1.x <= x_right && p1.y <= y_top && p1.y >= y_bottom) {
+                    if(p1.x > x_left && p1.x < x_right && p1.y < y_top && p1.y > y_bottom) {
                         innerPoint = p1;
                     }
 
-                    if (p2.x >= x_left && p2.x <= x_right && p2.y <= y_top && p2.y >= y_bottom)
+                    if (p2.x > x_left && p2.x < x_right && p2.y < y_top && p2.y > y_bottom)
                     {
                         innerPoint = p2;
                     }
