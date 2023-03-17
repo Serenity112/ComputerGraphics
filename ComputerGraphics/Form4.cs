@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ComputerGraphics
@@ -68,7 +69,7 @@ namespace ComputerGraphics
 
             for (int i = 0; i < 4; i++)
             {
-                DrawingUtil.DrawLineBresenham(_windowPoints[i], _windowPoints[(i + 1) % _windowPoints.Count], _graphics, _blueBrush, _windowWidth);
+                DrawingUtil.DrawLineBresenham(_windowPoints[i], _windowPoints[(i + 1) % 4], _graphics, _blueBrush, _windowWidth);
             }
         }
 
@@ -93,8 +94,6 @@ namespace ComputerGraphics
 
                 _segmentPoints.Add(new GeomPoint[] { p1, p2 });
 
-                Console.WriteLine($"Generated: p1: {x1} {y1}, p2: {x2} {y2}");
-
                 DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _redBrush, _linesBrushWidth);
             }
         }
@@ -117,7 +116,7 @@ namespace ComputerGraphics
                 p1.y < y_bottom && p2.y < y_bottom ||
                 p1.y > y_top && p2.y > y_top)
                 {
-                    continue; 
+                    continue;
                 }
 
                 // Тривиально видимы
@@ -127,11 +126,10 @@ namespace ComputerGraphics
                 p1.y < y_top && p2.y < y_top)
                 {
                     DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _purpleBrush, 2);
-                    continue; 
+                    continue;
                 }
 
                 // Определение нетривиальной видимости
-
                 double t1 = (x_left - p1.x) / (p2.x - p1.x);
                 GeomPoint pt1 = p1 + (p2 - p1) * t1;
 
@@ -144,32 +142,33 @@ namespace ComputerGraphics
                 double t4 = (y_top - p1.y) / (p2.y - p1.y);
                 GeomPoint pt4 = p1 + (p2 - p1) * t4;
 
-                List<GeomPoint> collisions = new List<GeomPoint>();
+                List<GeomPoint> intersections = new List<GeomPoint>();
 
-                if(pt1.y >= y_bottom && pt1.y <= y_top)
-                    collisions.Add(pt1);
+                if (pt1.y >= y_bottom && pt1.y <= y_top && t1 >= 0 && t1 <= 1)
+                    intersections.Add(pt1);
 
-                if (pt2.y >= y_bottom && pt2.y <= y_top)
-                    collisions.Add(pt2);
+                if (pt2.y >= y_bottom && pt2.y <= y_top && t2 >= 0 && t2 <= 1)
+                    intersections.Add(pt2);
 
-                if (pt3.x <= x_right && pt3.x >= x_left)
-                    collisions.Add(pt3);
+                if (pt3.x <= x_right && pt3.x >= x_left && t3 >= 0 && t3 <= 1)
+                    intersections.Add(pt3);
 
-                if (pt4.x <= x_right && pt4.x >= x_left)
-                    collisions.Add(pt4);
+                if (pt4.x <= x_right && pt4.x >= x_left && t4 >= 0 && t4 <= 1)
+                    intersections.Add(pt4);
 
                 // Нетривиальная невидимость
-                if (collisions.Count == 0)
+                if (intersections.Count == 0)
                 {
                     continue;
                 }
 
                 // Имеет 1 пересечение с окном
-                if (collisions.Count == 1)
+                if (intersections.Count == 1)
                 {
                     GeomPoint innerPoint = new GeomPoint(0, 0);
 
-                    if(p1.x > x_left && p1.x < x_right && p1.y < y_top && p1.y > y_bottom) {
+                    if (p1.x > x_left && p1.x < x_right && p1.y < y_top && p1.y > y_bottom)
+                    {
                         innerPoint = p1;
                     }
 
@@ -178,14 +177,14 @@ namespace ComputerGraphics
                         innerPoint = p2;
                     }
 
-                    DrawingUtil.DrawLineBresenham(collisions[0], innerPoint, _graphics, _purpleBrush, 2);
+                    DrawingUtil.DrawLineBresenham(intersections[0], innerPoint, _graphics, _purpleBrush, 2);
                     continue;
                 }
 
                 // Имеет 2 пересечения с окном
-                if (collisions.Count == 2)
+                if (intersections.Count == 2)
                 {
-                    DrawingUtil.DrawLineBresenham(collisions[0], collisions[1], _graphics, _purpleBrush, 2);
+                    DrawingUtil.DrawLineBresenham(intersections[0], intersections[1], _graphics, _purpleBrush, 2);
                     continue;
                 }
             }
