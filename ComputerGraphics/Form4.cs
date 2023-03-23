@@ -129,6 +129,21 @@ namespace ComputerGraphics
                     continue;
                 }
 
+                // Крайние случаи
+                // Вертикаль
+                if (p1.x == p2.x)
+                {
+                    DrawingUtil.DrawLineBresenham(new GeomPoint(p1.x, y_bottom), new GeomPoint(p1.x, y_top), _graphics, _purpleBrush, 2);
+                    continue;
+                }
+
+                // Горизонталь
+                if (p1.y == p2.y)
+                {
+                    DrawingUtil.DrawLineBresenham(new GeomPoint(x_left, p1.y), new GeomPoint(x_right, p1.y), _graphics, _purpleBrush, 2);
+                    continue;
+                }
+
                 // Определение нетривиальной видимости
                 double t1 = (x_left - p1.x) / (p2.x - p1.x);
                 GeomPoint pt1 = p1 + (p2 - p1) * t1;
