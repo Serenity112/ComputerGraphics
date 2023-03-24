@@ -189,6 +189,22 @@ namespace GeometricStructures
             return A * x;
         }
 
+        public static bool operator ==(Matrix A, Matrix B)
+        {
+            if (ReferenceEquals(A, B))
+                return true;
+
+            if (A is null || B is null)
+                return false;
+
+            return A.Equals(B);
+        }
+
+        public static bool operator !=(Matrix A, Matrix B)
+        {
+            return !(A == B);
+        }
+
         public double[,] ToArray()
         {
             double[,] arr = new double[NbRows, NbCols];
@@ -215,5 +231,40 @@ namespace GeometricStructures
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Matrix))
+                return false;
+
+            var other = (Matrix)obj;
+            if (other.data.GetLength(0) != data.GetLength(0) || other.data.GetLength(1) != data.GetLength(1))
+                return false;
+
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                for (int j = 0; j < data.GetLength(1); j++)
+                {
+                    if (Math.Abs(other.data[i, j] - data[i, j]) > double.Epsilon)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 17;
+
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                for (int j = 0; j < data.GetLength(1); j++)
+                {
+                    hashCode = hashCode * 31 + data[i, j].GetHashCode();
+                }
+            }
+
+            return hashCode;
+        }
     }
 }

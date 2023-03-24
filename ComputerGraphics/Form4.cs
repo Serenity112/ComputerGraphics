@@ -26,6 +26,11 @@ namespace ComputerGraphics
         private List<GeomPoint[]> _segmentPoints = new List<GeomPoint[]>();
         private List<GeomPoint> _windowPoints = new List<GeomPoint>();
 
+        double x_left;
+        double x_right;
+        double y_bottom;
+        double y_top;
+
         public Form4()
         {
             InitializeComponent();
@@ -98,12 +103,20 @@ namespace ComputerGraphics
             }
         }
 
+        private bool IfInsideWindow(GeomPoint point)
+        {
+            return point.x > x_left && point.x < x_right && point.y > y_bottom && point.y < y_top;
+        }
+
         private void DrawVisibleSegments()
         {
-            double x_left = _windowPoints[0].x;
-            double x_right = _windowPoints[1].x;
-            double y_bottom = _windowPoints[2].y;
-            double y_top = _windowPoints[0].y;
+            GeomPoint wp0 = _windowPoints[0];
+            GeomPoint wp2 = _windowPoints[2];
+
+            x_left = wp0.x < wp2.x ? wp0.x : wp2.x;
+            x_right = wp0.x < wp2.x ? wp2.x : wp0.x;
+            y_bottom = wp0.y < wp2.y ? wp0.y : wp2.y;
+            y_top = wp0.y < wp2.y ? wp2.y : wp0.y;
 
             foreach (var points in _segmentPoints)
             {
@@ -120,10 +133,7 @@ namespace ComputerGraphics
                 }
 
                 // Тривиально видимы
-                if (p1.x > x_left && p2.x > x_left &&
-                p1.x < x_right && p2.x < x_right &&
-                p1.y > y_bottom && p2.y > y_bottom &&
-                p1.y < y_top && p2.y < y_top)
+                if (IfInsideWindow(p1) && IfInsideWindow(p2))
                 {
                     DrawingUtil.DrawLineBresenham(p1, p2, _graphics, _purpleBrush, 2);
                     continue;
@@ -133,14 +143,18 @@ namespace ComputerGraphics
                 // Вертикаль
                 if (p1.x == p2.x)
                 {
-                    DrawingUtil.DrawLineBresenham(new GeomPoint(p1.x, y_bottom), new GeomPoint(p1.x, y_top), _graphics, _purpleBrush, 2);
+                    double y1 = IfInsideWindow(p1) ? p1.y : p1.y > y_top ? y_top : y_bottom;
+                    double y2 = IfInsideWindow(p2) ? p2.y : p2.y > y_top ? y_top : y_bottom;
+                    DrawingUtil.DrawLineBresenham(new GeomPoint(p1.x, y1), new GeomPoint(p1.x, y2), _graphics, _purpleBrush, 2);
                     continue;
                 }
 
                 // Горизонталь
                 if (p1.y == p2.y)
                 {
-                    DrawingUtil.DrawLineBresenham(new GeomPoint(x_left, p1.y), new GeomPoint(x_right, p1.y), _graphics, _purpleBrush, 2);
+                    double x1 = IfInsideWindow(p1) ? p1.x : p1.x < x_left ? x_left : x_right;
+                    double x2 = IfInsideWindow(p2) ? p2.x : p2.x < x_left ? x_left : x_right;
+                    DrawingUtil.DrawLineBresenham(new GeomPoint(x1, p1.y), new GeomPoint(x2, p1.y), _graphics, _purpleBrush, 2);
                     continue;
                 }
 
@@ -159,16 +173,16 @@ namespace ComputerGraphics
 
                 List<GeomPoint> intersections = new List<GeomPoint>();
 
-                if (pt1.y >= y_bottom && pt1.y <= y_top && t1 >= 0 && t1 <= 1)
+                if (pt1.y >= y_bottom && pt1.y <= y_top && t1 >= 0 && t1 <= 1 && !intersections.Contains(pt1))
                     intersections.Add(pt1);
 
-                if (pt2.y >= y_bottom && pt2.y <= y_top && t2 >= 0 && t2 <= 1)
+                if (pt2.y >= y_bottom && pt2.y <= y_top && t2 >= 0 && t2 <= 1 && !intersections.Contains(pt2))
                     intersections.Add(pt2);
 
-                if (pt3.x <= x_right && pt3.x >= x_left && t3 >= 0 && t3 <= 1)
+                if (pt3.x <= x_right && pt3.x >= x_left && t3 >= 0 && t3 <= 1 && !intersections.Contains(pt3))
                     intersections.Add(pt3);
 
-                if (pt4.x <= x_right && pt4.x >= x_left && t4 >= 0 && t4 <= 1)
+                if (pt4.x <= x_right && pt4.x >= x_left && t4 >= 0 && t4 <= 1 && !intersections.Contains(pt4))
                     intersections.Add(pt4);
 
                 // Нетривиальная невидимость
@@ -180,18 +194,7 @@ namespace ComputerGraphics
                 // Имеет 1 пересечение с окном
                 if (intersections.Count == 1)
                 {
-                    GeomPoint innerPoint = new GeomPoint(0, 0);
-
-                    if (p1.x > x_left && p1.x < x_right && p1.y < y_top && p1.y > y_bottom)
-                    {
-                        innerPoint = p1;
-                    }
-
-                    if (p2.x > x_left && p2.x < x_right && p2.y < y_top && p2.y > y_bottom)
-                    {
-                        innerPoint = p2;
-                    }
-
+                    GeomPoint innerPoint = IfInsideWindow(p1) ? p1 : p2;
                     DrawingUtil.DrawLineBresenham(intersections[0], innerPoint, _graphics, _purpleBrush, 2);
                     continue;
                 }

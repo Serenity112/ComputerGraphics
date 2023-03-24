@@ -87,9 +87,43 @@ namespace GeometricStructures
             return new GeomPoint(x * A.matrix);
         }
 
+        public static bool operator ==(GeomPoint A, GeomPoint B)
+        {
+            if (ReferenceEquals(A, B))
+                return true;
+
+            if (A is null || B is null)
+                return false;
+
+            return A.Equals(B);
+        }
+
+        public static bool operator !=(GeomPoint A, GeomPoint B)
+        {
+            return !(A == B);
+        }
+
         public double distance(GeomPoint B)
         {
             return Math.Sqrt(Math.Pow(x - B.x, 2) + Math.Pow(y - B.y, 2) + Math.Pow(z - B.z, 2));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is GeomPoint))
+                return false;
+
+            var other = (GeomPoint)obj;
+            return x == other.x && y == other.y && z == other.z;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 17;
+            hashCode = hashCode * 31 + x.GetHashCode();
+            hashCode = hashCode * 31 + y.GetHashCode();
+            hashCode = hashCode * 31 + z.GetHashCode();
+            return hashCode;
         }
     }
 }
