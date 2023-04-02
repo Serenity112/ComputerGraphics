@@ -81,6 +81,32 @@ namespace GeometricStructures
             return res;
         }
 
+        public static Matrix RotateBy(double rX, double rY, double rZ)
+        {
+            Matrix rotX = new Matrix(new double[3, 3]
+             {
+                { 1, 0, 0 },
+                { 0, Math.Cos(rX), -Math.Sin(rX) },
+                { 0, Math.Sin(rX), Math.Cos(rX) }
+             });
+
+            Matrix rotY = new Matrix(new double[3, 3]
+            {
+                { Math.Cos(rY), 0, Math.Sin(rY) },
+                { 0,1,0 },
+                { -Math.Sin(rY), 0, Math.Cos(rY) }
+            });
+
+            Matrix rotZ = new Matrix(new double[3, 3]
+            {
+                { Math.Cos(rZ), -Math.Sin(rZ), 0 },
+                { Math.Sin(rZ), Math.Cos(rZ), 0 },
+                { 0, 0, 1 }
+            });
+
+            return rotX * rotY * rotZ;
+        }
+
         public static Matrix operator ~(Matrix A)
         {
             return A.Transpose();

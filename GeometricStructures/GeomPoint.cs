@@ -103,6 +103,11 @@ namespace GeometricStructures
             return !(A == B);
         }
 
+        public static double ScalarProduct(GeomPoint A, GeomPoint B)
+        {
+            return A.x * B.x + A.y * B.y + A.z * B.z; 
+        }
+
         public double distance(GeomPoint B)
         {
             return Math.Sqrt(Math.Pow(x - B.x, 2) + Math.Pow(y - B.y, 2) + Math.Pow(z - B.z, 2));
