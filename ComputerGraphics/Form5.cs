@@ -27,8 +27,9 @@ namespace ComputerGraphics
         private Brush _purpleBrush = new SolidBrush(Color.Purple);
 
         private GeomPoint _spectatorPosition;
-        private readonly GeomPoint _initViewPoint = new GeomPoint(0, 0, 1);
-        private GeomPoint _viewPoint;
+        private readonly Matrix _initViewRotation = Matrix.Identity(3);
+        private Matrix _currentViewRotation;
+        private GeomPoint _forwardDirection;
         private readonly AdjacencyList _graph;
 
         public Form5()
@@ -88,37 +89,75 @@ namespace ComputerGraphics
             double rotY = (double)viewRotationY.Value * _degToRad;
             double rotZ = (double)viewRotationZ.Value * _degToRad;
 
-            _viewPoint = Matrix.RotateBy(rotX, rotY, rotZ) * _initViewPoint;
+            _currentViewRotation = _initViewRotation * Matrix.RotationBy(rotX, rotY, rotZ);
+            _forwardDirection = new GeomPoint(_currentViewRotation[0, 2], _currentViewRotation[1, 2], _currentViewRotation[2, 2]);
         }
 
-        // Unimplemented yet
-        private void LeaveVisibleSurfaces()
+        // Функция отбрасываения невидимых граней
+        // Eще не реализована :)
+        private void DeleteInvisibleSurfaces()
         {
 
         }
 
+        // Определение дистанции до плоскости обзора
         private double? FindOrthogonalDistance(GeomPoint p)
         {
-            double d = GeomPoint.ScalarProduct(_viewPoint, p - _spectatorPosition) / GeomPoint.ScalarProduct(_viewPoint, _viewPoint);
+            double d = GeomPoint.ScalarProduct(_forwardDirection, p - _spectatorPosition) / GeomPoint.ScalarProduct(_forwardDirection, _forwardDirection);
 
             return (d >= _nearSurface) ? d : (double?)null; 
         }
 
+        // Проекция куба на плоскости обзора
         private AdjacencyList Get2DProjection()
         {
             Dictionary<GeomPoint, GeomPoint> point3dTo2d = new Dictionary<GeomPoint, GeomPoint>();
 
+            // Постоянный коэффициент удаления от точки обзора в зависимости от угла обзора
             double coeff = 2 * Math.Tan(_fieldOfView / 2 * _degToRad);
 
             foreach (GeomPoint vertex in _graph.Keys)
             {
+                // Находим дистанцию до плоскости относительно точки
                 double? d = FindOrthogonalDistance(vertex);
                 if (d == null) continue;
 
-                GeomPoint surfaceVector = vertex - d.Value * _viewPoint - _spectatorPosition;
-                double distanceDeminutive = _width / (d.Value * coeff);
+                // Строим вектор из центра плоскости в сторону точки
+                GeomPoint surfaceVector = vertex - d.Value * _forwardDirection - _spectatorPosition;
 
-                point3dTo2d.Add(vertex, surfaceVector * distanceDeminutive);
+                // Определяем используемые строки для решения СЛАУ
+                int kx = -1, ky = -1;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_currentViewRotation[i, 0] != 0)
+                    {
+                        kx = 0;
+                        break;
+                    }
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_currentViewRotation[i, 1] != 0 && i != kx)
+                    {
+                        ky = i;
+                        break;
+                    }
+                }
+
+                // Здесь происходит сжимающее отображение из трехмерного пространства в двухмерное
+                // Определяем длины векторов в новом базисе - эти длины эквивалентны координатам X и Y на экране
+                Matrix screenUnits = Matrix.SolveLinearEquation(new Matrix(new double[2, 2]
+                {
+                    { _currentViewRotation[kx, 0], _currentViewRotation[kx, 1] },
+                    { _currentViewRotation[ky, 0], _currentViewRotation[ky, 1] }
+                }), new Matrix(new double[2, 1] {
+                    { ((Matrix)surfaceVector)[kx, 0] }, { ((Matrix)surfaceVector)[ky, 0] } }
+                ));
+
+                // Точка с учетом искажений перспективы
+                GeomPoint screenPosition = new GeomPoint(screenUnits[kx, 0], screenUnits[ky, 0]) * (_width / (d.Value * coeff));
+
+                point3dTo2d.Add(vertex, screenPosition);
             }
 
             AdjacencyList graph2d = new AdjacencyList();
@@ -134,6 +173,8 @@ namespace ComputerGraphics
             return graph2d;
         }
 
+        // Отрисовка каждого ребра
+        // Сейчас каждое ребро рисуется по два раза - нужно что то придумать
         private void Draw2DCube(AdjacencyList graph2d)
         {
             foreach (GeomPoint first in graph2d.Keys)
@@ -149,7 +190,7 @@ namespace ComputerGraphics
         {
             _graphics.Clear(Color.White);
             InitializeSpectator();
-            LeaveVisibleSurfaces();
+            DeleteInvisibleSurfaces();
             Draw2DCube(Get2DProjection());
         }
 

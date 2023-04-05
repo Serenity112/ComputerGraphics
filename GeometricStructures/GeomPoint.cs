@@ -57,6 +57,11 @@ namespace GeometricStructures
 
         public GeomPoint(double[,] data) : this(new Matrix(data)) { }
 
+        public static explicit operator Matrix(GeomPoint P)
+        {
+            return P.matrix;
+        }
+
         public static GeomPoint operator +(GeomPoint A, GeomPoint B)
         {
             return new GeomPoint(A.matrix + B.matrix);

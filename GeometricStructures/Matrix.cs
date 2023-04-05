@@ -81,7 +81,21 @@ namespace GeometricStructures
             return res;
         }
 
-        public static Matrix RotateBy(double rX, double rY, double rZ)
+        public static Matrix Identity(uint size)
+        {
+            Matrix identity = new Matrix(new double[size, size]);
+            for (uint i = 0; i < size; i++)
+            {
+                for (uint j = 0; j < size; j++)
+                {
+                    identity.data[i, j] = (i == j) ? 1 : 0; 
+                }
+            }
+            return identity;
+        }
+
+        /// Возвращает матрицу поворота вокруг осей X, Y и Z на rX, rY и rZ радиан
+        public static Matrix RotationBy(double rX, double rY, double rZ)
         {
             Matrix rotX = new Matrix(new double[3, 3]
              {
@@ -105,6 +119,44 @@ namespace GeometricStructures
             });
 
             return rotX * rotY * rotZ;
+        }
+
+        // Решение СЛАУ методом Гаусса
+        public static Matrix SolveLinearEquation(Matrix A, Matrix B)
+        {
+            Matrix identity = new Matrix(A);
+            Matrix result = new Matrix(B); 
+            if (B.NbCols != 1 || A.NbCols != A.NbRows || A.NbCols != B.NbRows)
+            {
+                throw new Exception("Для решения линейного уравнения матрица B должна иметь 1 столбец, а матрица A быть квадратной с той же размерностью");
+            }
+
+            for (int i = 0; i < identity.NbRows; i++)
+            {
+                for (int k = 0; k < identity.NbRows; k++)
+                {
+                    double coef;
+                    if (k == i)
+                    {
+                        coef = identity[i, i];
+                        for (int j = 0; j < identity.NbCols; j++)
+                        {
+                            identity[k, j] /= coef;
+                        }
+                        result[k, 0] /= coef;
+                    }
+                    else
+                    {
+                        coef = identity[k, i] / identity[i, i];
+                        for (int j = 0; j < identity.NbCols; j++)
+                        {
+                            identity[k, j] -= coef * identity[i, j];
+                        }
+                        result[k, 0] -= coef * B[i, 0];
+                    }
+                }
+            }
+            return result;
         }
 
         public static Matrix operator ~(Matrix A)
