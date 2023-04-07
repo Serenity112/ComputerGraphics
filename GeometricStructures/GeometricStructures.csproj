@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Circle.cs" />
+    <Compile Include="VolumetricObject.cs" />
     <Compile Include="DrawingUtil.cs" />
     <Compile Include="GeomPoint.cs" />
     <Compile Include="Line.cs" />

@@ -108,9 +108,14 @@ namespace GeometricStructures
             return !(A == B);
         }
 
-        public static double ScalarProduct(GeomPoint A, GeomPoint B)
+        public static double DotProduct(GeomPoint A, GeomPoint B)
         {
             return A.x * B.x + A.y * B.y + A.z * B.z; 
+        }
+
+        public static GeomPoint VectorProduct(GeomPoint A, GeomPoint B)
+        {
+            return new GeomPoint(A.y * B.z - A.z * B.y, A.z * B.x - A.x * B.z, A.x * B.y - A.y * B.x);
         }
 
         public double distance(GeomPoint B)

@@ -6,8 +6,6 @@ using System.Windows.Forms;
 
 namespace ComputerGraphics
 {
-    using AdjacencyList = Dictionary<GeomPoint, List<GeomPoint>>;
-
     public partial class Form5 : Form
     {
         private readonly int _width;
@@ -30,7 +28,8 @@ namespace ComputerGraphics
         private readonly Matrix _initViewRotation = Matrix.Identity(3);
         private Matrix _currentViewRotation;
         private GeomPoint _forwardDirection;
-        private readonly AdjacencyList _graph;
+
+        private VolumetricObject _cube;
 
         public Form5()
         {
@@ -42,10 +41,6 @@ namespace ComputerGraphics
             _graphics = pictureBox1.CreateGraphics();
             _graphics.TranslateTransform(_width / 2, _height / 2);
             _graphics.ScaleTransform(1, -1);
-
-            _graph = new AdjacencyList();
-
-            InitializeCube();
         }
 
         // Initializing 3D cube graph with vertices and edges
@@ -65,14 +60,17 @@ namespace ComputerGraphics
                 new GeomPoint(-1, 2, 2),
             };
 
-            _graph.Add(points[0], new List<GeomPoint>() { points[1], points[3], points[4] });
-            _graph.Add(points[1], new List<GeomPoint>() { points[0], points[2], points[5] });
-            _graph.Add(points[2], new List<GeomPoint>() { points[1], points[3], points[6] });
-            _graph.Add(points[3], new List<GeomPoint>() { points[0], points[2], points[7] });
-            _graph.Add(points[4], new List<GeomPoint>() { points[5], points[7], points[0] });
-            _graph.Add(points[5], new List<GeomPoint>() { points[4], points[6], points[1] });
-            _graph.Add(points[6], new List<GeomPoint>() { points[5], points[7], points[2] });
-            _graph.Add(points[7], new List<GeomPoint>() { points[4], points[6], points[3] });
+            List<Surface> surfaces = new List<Surface>()
+            {
+                new Surface(new List<int>() { 0, 1, 2, 3 }),
+                new Surface(new List<int>() { 4, 5, 6, 7 }),
+                new Surface (new List<int>() { 0, 1, 5, 4 }),
+                new Surface (new List<int>() { 2, 3, 7, 6 }),
+                new Surface (new List<int>() { 0, 3, 7, 4 }),
+                new Surface (new List<int>() { 1, 2, 6, 5 })
+            };
+
+            _cube = new VolumetricObject(points, surfaces);
         }
 
         // Initializing spectator point and view direction
@@ -93,37 +91,58 @@ namespace ComputerGraphics
             _forwardDirection = new GeomPoint(_currentViewRotation[0, 2], _currentViewRotation[1, 2], _currentViewRotation[2, 2]);
         }
 
-        // Функция отбрасываения невидимых граней
-        // Eще не реализована :)
+        // Функция отбрасываения невидимых ребер
         private void DeleteInvisibleSurfaces()
         {
+            for (int i = 0; i < _cube.Surfaces.Count; i++)
+            {
+                int k = 0;
+                Surface currentSurface = _cube.Surfaces[i];
+                int surfacePoint1 = currentSurface[0];
+                int surfacePoint2 = currentSurface[1];
+                int surfacePoint3 = currentSurface[2];
 
+                int randomPoint = _cube.Surfaces[(i + 1) % _cube.Surfaces.Count][k];
+                while (currentSurface.Contains(randomPoint) )
+                {
+                    randomPoint = _cube.Surfaces[(i + 1) % _cube.Surfaces.Count][++k];
+                }
+
+                GeomPoint normale = GeomPoint.VectorProduct(_cube.Vertices[surfacePoint3] - _cube.Vertices[surfacePoint1], _cube.Vertices[surfacePoint2] - _cube.Vertices[surfacePoint1]);
+
+                if (GeomPoint.DotProduct(normale, _cube.Vertices[randomPoint] - _cube.Vertices[surfacePoint1]) > 0) normale *= -1;
+
+                if (GeomPoint.DotProduct(normale, _cube.Vertices[surfacePoint1] - _spectatorPosition) > 0)
+                {
+                    _cube.Surfaces.Remove(currentSurface);
+                    i--;
+                }
+            }
         }
 
         // Определение дистанции до плоскости обзора
-        private double? FindOrthogonalDistance(GeomPoint p)
+        private double FindOrthogonalDistance(GeomPoint p)
         {
-            double d = GeomPoint.ScalarProduct(_forwardDirection, p - _spectatorPosition) / GeomPoint.ScalarProduct(_forwardDirection, _forwardDirection);
+            double d = GeomPoint.DotProduct(_forwardDirection, p - _spectatorPosition) / GeomPoint.DotProduct(_forwardDirection, _forwardDirection);
 
-            return (d >= _nearSurface) ? d : (double?)null; 
+            return (d >= _nearSurface) ? d : _nearSurface;
         }
 
-        // Проекция куба на плоскости обзора
-        private AdjacencyList Get2DProjection()
+        // Ассоциациативный массив с точками в трехмерном пространстве к проекциеям точек на экран
+        private Dictionary<GeomPoint, GeomPoint> GetPointsPerspectiveProjection()
         {
             Dictionary<GeomPoint, GeomPoint> point3dTo2d = new Dictionary<GeomPoint, GeomPoint>();
 
             // Постоянный коэффициент удаления от точки обзора в зависимости от угла обзора
             double coeff = 2 * Math.Tan(_fieldOfView / 2 * _degToRad);
 
-            foreach (GeomPoint vertex in _graph.Keys)
+            foreach (GeomPoint vertex in _cube.Vertices)
             {
                 // Находим дистанцию до плоскости относительно точки
-                double? d = FindOrthogonalDistance(vertex);
-                if (d == null) continue;
+                double d = FindOrthogonalDistance(vertex);
 
                 // Строим вектор из центра плоскости в сторону точки
-                GeomPoint surfaceVector = vertex - d.Value * _forwardDirection - _spectatorPosition;
+                GeomPoint surfaceVector = vertex - d * _forwardDirection - _spectatorPosition;
 
                 // Определяем используемые строки для решения СЛАУ
                 int kx = -1, ky = -1;
@@ -155,33 +174,27 @@ namespace ComputerGraphics
                 ));
 
                 // Точка с учетом искажений перспективы
-                GeomPoint screenPosition = new GeomPoint(screenUnits[kx, 0], screenUnits[ky, 0]) * (_width / (d.Value * coeff));
+                GeomPoint screenPosition = new GeomPoint(screenUnits[kx, 0], screenUnits[ky, 0]) * (_width / (d * coeff));
 
                 point3dTo2d.Add(vertex, screenPosition);
             }
 
-            AdjacencyList graph2d = new AdjacencyList();
-            foreach (GeomPoint key in _graph.Keys)
-            {
-                graph2d.Add(point3dTo2d[key], new List<GeomPoint>());
-                foreach (GeomPoint val in _graph[key])
-                {
-                    graph2d[point3dTo2d[key]].Add(point3dTo2d[val]);
-                }
-            }
-
-            return graph2d;
+            return point3dTo2d;
         }
 
         // Отрисовка каждого ребра
-        // Сейчас каждое ребро рисуется по два раза - нужно что то придумать
-        private void Draw2DCube(AdjacencyList graph2d)
+        private void Draw2DCube()
         {
-            foreach (GeomPoint first in graph2d.Keys)
+            List<(int, int)> drawnEdges = new List<(int, int)>();
+            VolumetricObject proj = _cube.Get2DProjection(GetPointsPerspectiveProjection());
+            foreach (Surface surface in proj.Surfaces)
             {
-                foreach(GeomPoint second in graph2d[first])
+                for (int i = 0; i < surface.Count; i++)
                 {
-                    DrawingUtil.DrawLineBresenham(first, second, _graphics, _redBrush, _linesBrushWidth);
+                    int index1 = surface[i], index2 = surface[(i + 1) % surface.Count];
+                    if (drawnEdges.Contains((index1, index2)) || drawnEdges.Contains((index2, index1))) continue;
+                    DrawingUtil.DrawLineBresenham(proj.Vertices[index1], proj.Vertices[index2], _graphics, _redBrush, _linesBrushWidth);
+                    drawnEdges.Add((index1, index2));
                 }
             }
         }
@@ -189,9 +202,10 @@ namespace ComputerGraphics
         private void button1_Click(object sender, EventArgs e)
         {
             _graphics.Clear(Color.White);
+            InitializeCube();
             InitializeSpectator();
             DeleteInvisibleSurfaces();
-            Draw2DCube(Get2DProjection());
+            Draw2DCube();
         }
 
         private void viewRotationX_ValueChanged(object sender, EventArgs e)
