@@ -233,6 +233,7 @@ namespace ComputerGraphics
 
         private void button1_Click(object sender, EventArgs e)
         {
+            errorLabel.Text = "";
             _graphics.Clear(Color.White);
             
             switch (edgesDisplayMode.Text)
@@ -249,7 +250,16 @@ namespace ComputerGraphics
             }
 
             InitializeCube();
-            InitializeSpectator();
+            try
+            {
+                InitializeSpectator();
+            }
+            catch (FormatException)
+            {
+                errorLabel.Text = "Неверный формат чисел";
+                return;
+            }
+
             DetectInvisibleSurfaces();
             Draw2DCube();
         }

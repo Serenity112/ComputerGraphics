@@ -43,6 +43,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.edgesDisplayMode = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.errorLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewRotationX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewRotationY)).BeginInit();
@@ -177,7 +178,7 @@
             // 
             this.fieldOfView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fieldOfView.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.fieldOfView.Location = new System.Drawing.Point(1400, 304);
+            this.fieldOfView.Location = new System.Drawing.Point(1380, 305);
             this.fieldOfView.Margin = new System.Windows.Forms.Padding(4);
             this.fieldOfView.Maximum = new decimal(new int[] {
             120,
@@ -202,7 +203,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(1400, 281);
+            this.label1.Location = new System.Drawing.Point(1380, 282);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(243, 24);
@@ -253,9 +254,9 @@
             "Не отображаются",
             "Отображаются пунктиром",
             "Отображаются полностью"});
-            this.edgesDisplayMode.Location = new System.Drawing.Point(1400, 405);
+            this.edgesDisplayMode.Location = new System.Drawing.Point(1380, 406);
             this.edgesDisplayMode.Name = "edgesDisplayMode";
-            this.edgesDisplayMode.Size = new System.Drawing.Size(220, 30);
+            this.edgesDisplayMode.Size = new System.Drawing.Size(301, 30);
             this.edgesDisplayMode.TabIndex = 10;
             this.edgesDisplayMode.Text = "Не отображаются";
             // 
@@ -263,17 +264,28 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(1401, 374);
+            this.label5.Location = new System.Drawing.Point(1381, 375);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(309, 24);
             this.label5.TabIndex = 11;
             this.label5.Text = "Отображение невидимых ребер:";
             // 
+            // errorLabel
+            // 
+            this.errorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.errorLabel.ForeColor = System.Drawing.Color.Red;
+            this.errorLabel.Location = new System.Drawing.Point(1366, 478);
+            this.errorLabel.Name = "errorLabel";
+            this.errorLabel.Size = new System.Drawing.Size(329, 62);
+            this.errorLabel.TabIndex = 12;
+            this.errorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1812, 788);
+            this.ClientSize = new System.Drawing.Size(1784, 788);
+            this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.edgesDisplayMode);
             this.Controls.Add(this.label3);
@@ -319,5 +331,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox edgesDisplayMode;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label errorLabel;
     }
 }
