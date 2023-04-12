@@ -41,6 +41,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.edgesDisplayMode = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewRotationX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewRotationY)).BeginInit();
@@ -52,7 +54,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Location = new System.Drawing.Point(25, 13);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1262, 722);
             this.pictureBox1.TabIndex = 0;
@@ -62,7 +64,7 @@
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button1.Location = new System.Drawing.Point(1371, 554);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(272, 62);
             this.button1.TabIndex = 1;
@@ -75,7 +77,7 @@
             this.viewRotationX.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.viewRotationX.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.viewRotationX.Location = new System.Drawing.Point(1583, 88);
-            this.viewRotationX.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.viewRotationX.Margin = new System.Windows.Forms.Padding(4);
             this.viewRotationX.Maximum = new decimal(new int[] {
             360,
             0,
@@ -96,7 +98,7 @@
             this.viewRotationY.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.viewRotationY.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.viewRotationY.Location = new System.Drawing.Point(1583, 120);
-            this.viewRotationY.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.viewRotationY.Margin = new System.Windows.Forms.Padding(4);
             this.viewRotationY.Maximum = new decimal(new int[] {
             360,
             0,
@@ -122,7 +124,7 @@
             this.viewRotationZ.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.viewRotationZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.viewRotationZ.Location = new System.Drawing.Point(1583, 152);
-            this.viewRotationZ.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.viewRotationZ.Margin = new System.Windows.Forms.Padding(4);
             this.viewRotationZ.Maximum = new decimal(new int[] {
             360,
             0,
@@ -143,7 +145,7 @@
             this.spectatorX.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.spectatorX.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.spectatorX.Location = new System.Drawing.Point(1416, 88);
-            this.spectatorX.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.spectatorX.Margin = new System.Windows.Forms.Padding(4);
             this.spectatorX.Name = "spectatorX";
             this.spectatorX.Size = new System.Drawing.Size(109, 28);
             this.spectatorX.TabIndex = 5;
@@ -154,7 +156,7 @@
             this.spectatorY.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.spectatorY.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.spectatorY.Location = new System.Drawing.Point(1416, 120);
-            this.spectatorY.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.spectatorY.Margin = new System.Windows.Forms.Padding(4);
             this.spectatorY.Name = "spectatorY";
             this.spectatorY.Size = new System.Drawing.Size(109, 28);
             this.spectatorY.TabIndex = 6;
@@ -165,7 +167,7 @@
             this.spectatorZ.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.spectatorZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.spectatorZ.Location = new System.Drawing.Point(1416, 152);
-            this.spectatorZ.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.spectatorZ.Margin = new System.Windows.Forms.Padding(4);
             this.spectatorZ.Name = "spectatorZ";
             this.spectatorZ.Size = new System.Drawing.Size(109, 28);
             this.spectatorZ.TabIndex = 7;
@@ -176,7 +178,7 @@
             this.fieldOfView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fieldOfView.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.fieldOfView.Location = new System.Drawing.Point(1400, 304);
-            this.fieldOfView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.fieldOfView.Margin = new System.Windows.Forms.Padding(4);
             this.fieldOfView.Maximum = new decimal(new int[] {
             120,
             0,
@@ -243,11 +245,37 @@
             this.label4.Text = "X\r\nY\r\nZ";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // edgesDisplayMode
+            // 
+            this.edgesDisplayMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.edgesDisplayMode.FormattingEnabled = true;
+            this.edgesDisplayMode.Items.AddRange(new object[] {
+            "Не отображаются",
+            "Отображаются пунктиром",
+            "Отображаются полностью"});
+            this.edgesDisplayMode.Location = new System.Drawing.Point(1400, 405);
+            this.edgesDisplayMode.Name = "edgesDisplayMode";
+            this.edgesDisplayMode.Size = new System.Drawing.Size(220, 30);
+            this.edgesDisplayMode.TabIndex = 10;
+            this.edgesDisplayMode.Text = "Не отображаются";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(1401, 374);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(309, 24);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Отображение невидимых ребер:";
+            // 
             // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1812, 788);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.edgesDisplayMode);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
@@ -261,7 +289,7 @@
             this.Controls.Add(this.viewRotationX);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form5";
             this.Text = "Form5";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -289,5 +317,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox edgesDisplayMode;
+        private System.Windows.Forms.Label label5;
     }
 }

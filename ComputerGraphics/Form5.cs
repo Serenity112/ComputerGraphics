@@ -8,6 +8,13 @@ namespace ComputerGraphics
 {
     public partial class Form5 : Form
     {
+        public enum SurfaceInvisibilityMode
+        {
+            NOT_DISPLAYABLE,
+            DASHED_DISPLAYABLE,
+            FULLY_DISPLAYABLE
+        }
+
         private readonly int _width;
         private readonly int _height;
 
@@ -30,6 +37,8 @@ namespace ComputerGraphics
         private GeomPoint _forwardDirection;
 
         private VolumetricObject _cube;
+
+        private SurfaceInvisibilityMode _edgesDisplayMode;
 
         public Form5()
         {
@@ -92,7 +101,7 @@ namespace ComputerGraphics
         }
 
         // Функция отбрасываения невидимых ребер
-        private void DeleteInvisibleSurfaces()
+        private void DetectInvisibleSurfaces()
         {
             for (int i = 0; i < _cube.Surfaces.Count; i++)
             {
@@ -114,8 +123,7 @@ namespace ComputerGraphics
 
                 if (GeomPoint.DotProduct(normale, _cube.Vertices[surfacePoint1] - _spectatorPosition) > 0)
                 {
-                    _cube.Surfaces.Remove(currentSurface);
-                    i--;
+                    currentSurface.Invisible = true;
                 }
             }
         }
@@ -123,7 +131,7 @@ namespace ComputerGraphics
         // Определение дистанции до плоскости обзора
         private double FindOrthogonalDistance(GeomPoint p)
         {
-            double d = GeomPoint.DotProduct(_forwardDirection, p - _spectatorPosition) / GeomPoint.DotProduct(_forwardDirection, _forwardDirection);
+            double d = GeomPoint.DotProduct(_forwardDirection, p - _spectatorPosition);
 
             return (d >= _nearSurface) ? d : _nearSurface;
         }
@@ -131,6 +139,7 @@ namespace ComputerGraphics
         // Ассоциациативный массив с точками в трехмерном пространстве к проекциеям точек на экран
         private Dictionary<GeomPoint, GeomPoint> GetPointsPerspectiveProjection()
         {
+            double maximumError = 1e-12;
             Dictionary<GeomPoint, GeomPoint> point3dTo2d = new Dictionary<GeomPoint, GeomPoint>();
 
             // Постоянный коэффициент удаления от точки обзора в зависимости от угла обзора
@@ -148,15 +157,15 @@ namespace ComputerGraphics
                 int kx = -1, ky = -1;
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_currentViewRotation[i, 0] != 0)
+                    if (!(_currentViewRotation[i, 0] <= maximumError && _currentViewRotation[i, 0] >= -maximumError))
                     {
-                        kx = 0;
+                        kx = i;
                         break;
                     }
                 }
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_currentViewRotation[i, 1] != 0 && i != kx)
+                    if (!(_currentViewRotation[i, 1] <= maximumError && _currentViewRotation[i, 1] >= -maximumError) && i != kx)
                     {
                         ky = i;
                         break;
@@ -174,7 +183,7 @@ namespace ComputerGraphics
                 ));
 
                 // Точка с учетом искажений перспективы
-                GeomPoint screenPosition = new GeomPoint(screenUnits[kx, 0], screenUnits[ky, 0]) * (_width / (d * coeff));
+                GeomPoint screenPosition = new GeomPoint(screenUnits[0, 0], screenUnits[1, 0]) * (_width / (d * coeff));
 
                 point3dTo2d.Add(vertex, screenPosition);
             }
@@ -182,19 +191,42 @@ namespace ComputerGraphics
             return point3dTo2d;
         }
 
+        private void DrawEdge(GeomPoint vertex1, GeomPoint vertex2)
+        {
+            switch (_edgesDisplayMode)
+            {
+                case SurfaceInvisibilityMode.NOT_DISPLAYABLE:
+                    break;
+                case SurfaceInvisibilityMode.FULLY_DISPLAYABLE:
+                case SurfaceInvisibilityMode.DASHED_DISPLAYABLE:
+                    DrawingUtil.DrawLineBresenham(vertex1, vertex2, _graphics, _redBrush, _linesBrushWidth, _edgesDisplayMode == SurfaceInvisibilityMode.DASHED_DISPLAYABLE);
+                    break;
+            }
+        }
+
         // Отрисовка каждого ребра
         private void Draw2DCube()
         {
-            List<(int, int)> drawnEdges = new List<(int, int)>();
+            List<(int, int)> drawnVisibleEdges = new List<(int, int)>(), drawnInvisibleEdges = new List<(int, int)>();
             VolumetricObject proj = _cube.Get2DProjection(GetPointsPerspectiveProjection());
             foreach (Surface surface in proj.Surfaces)
             {
                 for (int i = 0; i < surface.Count; i++)
                 {
                     int index1 = surface[i], index2 = surface[(i + 1) % surface.Count];
-                    if (drawnEdges.Contains((index1, index2)) || drawnEdges.Contains((index2, index1))) continue;
-                    DrawingUtil.DrawLineBresenham(proj.Vertices[index1], proj.Vertices[index2], _graphics, _redBrush, _linesBrushWidth);
-                    drawnEdges.Add((index1, index2));
+
+                    if (drawnVisibleEdges.Contains((index1, index2)) || drawnVisibleEdges.Contains((index2, index1))) continue;
+                    else if (!surface.Invisible)
+                    {
+                        DrawingUtil.DrawLineBresenham(proj.Vertices[index1], proj.Vertices[index2], _graphics, _redBrush, _linesBrushWidth);
+                        drawnVisibleEdges.Add((index1, index2));
+                    }
+
+                    if (surface.Invisible && !(drawnInvisibleEdges.Contains((index1, index2)) || drawnInvisibleEdges.Contains((index2, index1))))
+                    {
+                        DrawEdge(proj.Vertices[index1], proj.Vertices[index2]);
+                        drawnInvisibleEdges.Add((index1, index2));
+                    }
                 }
             }
         }
@@ -202,9 +234,23 @@ namespace ComputerGraphics
         private void button1_Click(object sender, EventArgs e)
         {
             _graphics.Clear(Color.White);
+            
+            switch (edgesDisplayMode.Text)
+            {
+                case "Отображаются пунктиром":
+                    _edgesDisplayMode = SurfaceInvisibilityMode.DASHED_DISPLAYABLE;
+                    break;
+                case "Отображаются полностью":
+                    _edgesDisplayMode = SurfaceInvisibilityMode.FULLY_DISPLAYABLE;
+                    break;
+                default:
+                    _edgesDisplayMode = SurfaceInvisibilityMode.NOT_DISPLAYABLE;
+                    break;
+            }
+
             InitializeCube();
             InitializeSpectator();
-            DeleteInvisibleSurfaces();
+            DetectInvisibleSurfaces();
             Draw2DCube();
         }
 

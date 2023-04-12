@@ -53,7 +53,7 @@ namespace GeometricStructures
             DrawLineBresenham(new GeomPoint(-width / 2, 0), new GeomPoint(width / 2, 0), G, brush, 1);
         }
 
-        public static void DrawLineBresenham(GeomPoint point1, GeomPoint point2, Graphics G, Brush brush, double brushWidth)
+        public static void DrawLineBresenham(GeomPoint point1, GeomPoint point2, Graphics G, Brush brush, double brushWidth, bool dashed = false)
         {
             int x1 = Convert.ToInt32(point1.x);
             int y1 = Convert.ToInt32(point1.y);
@@ -82,9 +82,19 @@ namespace GeometricStructures
 
             int numerator = longest >> 1;
 
+            byte skip = 0;
             for (int i = 0; i <= longest; i++)
             {
-                DrawPixel(x1, y1, G, brush, brushWidth);
+                if (dashed)
+                {
+                    if (skip == 0)
+                    {
+                        DrawPixel(x1, y1, G, brush, brushWidth);
+                        skip = 5;
+                    }
+                    else skip--;
+                }
+                else DrawPixel(x1, y1, G, brush, brushWidth);
 
                 numerator += shortest;
 

@@ -4,6 +4,8 @@ namespace GeometricStructures
 {
     public class Surface : List<int>
     {
+        public bool Invisible = false;
+
         public Surface(List<int> points) : base(points) { }
     }
 
